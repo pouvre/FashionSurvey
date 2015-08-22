@@ -1,0 +1,771 @@
+% Declare the document as type 'article', size A4 and font size 12pt
+\documentclass[a4paper,12pt]{article}
+
+% include some packages that will be used
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage{graphicx}
+% include the package geometry defining the margins of the document
+\usepackage{color, pdfcolmk}
+\usepackage[left=2cm,right=2cm,top=2.5cm,bottom=2.5cm]{geometry}
+\usepackage{listings}
+\usepackage{verbatim}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\tolerance=1000
+% include packages for proper management of xtable
+\usepackage{longtable}
+\usepackage{tabularx}
+\usepackage{rotating}
+\usepackage{array,multirow,multicol,makecell}
+\setcellgapes{1pt}
+%\makegapedcells
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash }b{#1}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash }b{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash }b{#1}}
+
+% overwrite the headpage and footpage setting
+\renewcommand{\headrulewidth}{1pt}              % add a line below the headpage
+\fancyhead[L]{INSEAD - GEMBA15}                 % define the text on the left of the headpage
+\fancyhead[R]{Big Data - Implementation Essay}  % define the text on the right of the headpage
+
+\renewcommand{\footrulewidth}{1pt}              % add a line above the footpage
+\fancyfoot[L]{Pascal OUVRE}                     % define the text on the left of the footpage
+\fancyfoot[C]{Page: \thepage}                   % define the text on the center of the headpage
+\fancyfoot[R]{\today}                           % define the text on the right of the headpage
+
+% beginning of the document
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+% required to include later R code
+\DefineVerbatimEnvironment{Sinput}{Verbatim}{formatcom = {\color[rgb]{0, 0, 0.56}}} 
+\SweaveOpts{prefix.string = figs/fig, eps = FALSE, pdf = TRUE} 
+
+% Title page - specific page
+\begin{titlepage}
+  
+  % Headpage
+  \parindent=0pt                                    % remove the default indexation
+  \textbf{INSEAD - GEMBA15 Europe}                  % zdd a text in bold
+  % Logo
+  \vspace*{3cm}                                     % add a vertical space of 3cm
+  \begin{center}
+  \includegraphics[width=4cm]{images/logo2.png}%    % include an image
+  \end{center}
+  
+  % Title
+  \vspace*{2cm}                                     % add a vertical space of 3cm
+  \hrulefill                                        % add horizontal line          
+  \begin{center}\bfseries\Huge                      % define a text zone center and in huge
+  A marketing study on fashion items in particular hats, turbans and headbands
+  \end{center}
+  \hrulefill                                        % add horizontal line
+  \vspace*{1cm}                                     % add a vertical space of 1cm
+  % Author
+  \begin{center}\bfseries\Large
+  Pascal OUVRE, INSEAD GEMBA 15 - Europe
+  \end{center}
+  % Sub-title
+  \begin{center}\bfseries\Large
+  Implementation Essay on Big Data \\ Professor: Theodaurus Evgeniou
+  \end{center}
+  \vspace*{1cm}
+  % Note
+  \begin{center}
+  This report has been automatically generated using R-Studio and \LaTeX.
+  \end{center}
+  
+  % Footpage
+  \vspace*{4cm}
+  \begin{flushright}
+  \today 
+  \end{flushright}   
+\end{titlepage}
+
+% Creation of the summary of the document
+\tableofcontents
+\newpage                                            % move to a new page
+\parindent=0pt
+
+% For the structure of the document, displayed in the table of content
+% use: Level1 = setion, Level 2 = subsection, Level 3 = subssubsection 
+
+\section{Chapter 1: Introduction}                   
+Donia Allegue is a young designer, who opened her own fashion house dedicated to turbans in 2013 in Paris. Her products (see section ~\ref{label-models}, page~\pageref{label-models}) have already known certain successes and have been presented in most famous fashion magazines such as Vogue, L'Officiel, Vanity Fair, Marie Claire, Cosmopolitan or Grazia. Her products are available in two prestigious stores Printemps Haussmann in Paris and Harvey Nichols in Riyad. For more information : \url{http://www.doniaallegue.com}.
+\\
+\\
+To help Donia in better understanding her customers, we decided to conduct a marketing survey about women's habits regarding luxury products, hats and in particular turbans. The latter are quite unusual luxury accessories, then collecting feedbacks from potential customers is key to design more successful products.
+\\
+\\
+This survey is the opportuniy to apply the learnings of the "Big Data" Elective course followed in July 2015 to a concrete exemple. The objectives of this Key Implementation Essay are then:
+\begin{enumerate}
+\item Discover R-Studio and the use of its statistical features;
+\item Apply the Factor Analysis tool to this survey;
+\item Discover \LaTeX  and Sweave to generate a PDF report (this document).
+\end{enumerate}
+The source files (data and R-Studio code) are available on my GitHub account at the following link: \url{https://github.com/pouvre/FashionSurvey}.
+\\
+\\
+Another example of R-Studio application, dedicated to reporting and data visualization using Shiny and GoogleVis modules, is described in the appendix (see section ~\ref{label-example}, page~\pageref{label-example}). The data are not public, then this application is not published under GitHub.
+
+\section{Chapter 2: The Survey}
+The survey has been elaborated conjointly with Donia and is organized in four parts:
+\begin{enumerate}
+\item Part 1: women's habits in purchasing high-end fashion items
+\item Part 2: women's usage and purchase habits for hats, turbans and headbands
+\item Part 3: feedbacks about some of the existing models
+\item Part 4: general information about respondent's profile
+\end{enumerate}
+The survey has been elaborated using Google Survey \href{https://docs.google.com/forms/d/13krG0z9-9n1uMKF8BxsFDfySs-yXLMGgqxfL4C8y10U/viewform}{https://docs.google.com/survey}. The list of the questions asked with the possible answers is provided in the appendix (see section ~\ref{label-survey}, page~\pageref{label-survey}) \\
+\\
+The survey was released Wednesday the 29th of July to about 500 contacts and the responses used to build this report were collected Sunday the 16th of August. The data collected have required a manual post-treatment to be properly handled by R-Studio, in particular converting "text-data", such as list of choices, in numerical value. The rules of conversion are also explained in the same appendix (see section ~\ref{label-survey}, page~\pageref{label-survey}). \\
+\\
+The survey contains also some free-text questions. For simplicity, mainly due to the timing constraints of this implementation essay, these free-text questions have been removed from the analysis. Nevertheless, they could have been used, in particular if some similarities are identified among the responses.
+
+<<Chunk-parameters, echo=FALSE, fig=FALSE>>= 
+# Parmeters for the application
+# Mode debug
+debug=TRUE
+# Method for the analysis
+myMethod = "varimax"
+# Number of factors to use
+myFactSize = 7
+
+# Include required library
+library(xtable)
+library(psych)
+library(FactoMineR)
+library(lattice)
+library(grDevices)
+library(plyr)
+
+# Some user-defined funcions
+myStringClean <- function(str) { 
+  str = gsub("."," ",str, fixed=TRUE)
+  str = gsub("[[:space:]]+$","",str)
+  str = gsub("\\s+"," ",str)
+  #str = substr(str, 1, 20) 
+  return(str)
+}
+
+# Load data
+myData <- read.table('~/Documents/R Studio Projects/FashionSurvey/data.csv', sep=';', header=TRUE)
+myAttr <- read.table('~/Documents/R Studio Projects/FashionSurvey/attributes.csv', sep=';', header=TRUE)
+myMap <- read.table('~/Documents/R Studio Projects/FashionSurvey/mapping.csv', sep=';', header=TRUE)
+myAttrFac <- read.table('~/Documents/R Studio Projects/FashionSurvey/attributes-factor.csv', sep=';', header=TRUE)
+
+# Cleaning of the attributes names
+for (i in 1:ncol(myData)) { 
+  colnames(myData)[i] = myStringClean(colnames(myData)[i])
+}
+
+for (i in 1:ncol(myAttr)) { 
+  colnames(myAttr)[i] = myStringClean(colnames(myAttr)[i])
+}
+
+for (i in 1:ncol(myAttrFac)) { 
+  colnames(myAttrFac)[i] = myStringClean(colnames(myAttrFac)[i])
+}
+
+# Store of the data in variables
+myDataColNames = colnames(myData)
+myAttrColNames = colnames(myAttr)
+myAttrFacColNames = colnames(myAttrFac)
+
+# Get the data only for the selected attributes
+myDataFactor = as.matrix(myData[,myAttrFacColNames, drop=FALSE])
+
+# Some parameters (size) about our data
+myDataSize = nrow(myData)
+myDataColNamesSize = ncol(myData)
+myAttrColNamesSize = ncol(myAttr)
+myAttrFacNamesSize = ncol(myAttrFac)
+@
+
+\section{Chapter 3: The Data Analysis}
+\subsection{The key findings}
+% Analysis of the data
+The key findings of this survey are built based on calculations of statistical values (such as mean, min, max, standard deviation and frequencies) for each variable of the \Sexpr{myDataSize} responses. This number of answers is quite low compared to the 500 people contacted but it can be explained by the period of the survey (August). The detailed statistical values are provided in appendix (see section ~\ref{label-statistics}, page~\pageref{label-statistics}).\\
+
+<<Chunk-TabSummary01, echo=FALSE, fig=FALSE, results=tex>>= 
+  # For each column of the selected data, do the following calculations
+  myTabSummary = apply(myData, 2, function(r) c(min(r, na.rm = TRUE), 
+                                                      quantile(r, 0.25, na.rm = TRUE), 
+                                                      quantile(r, 0.5, na.rm = TRUE), 
+                                                      mean(r, na.rm = TRUE), 
+                                                      quantile(r, 0.75, na.rm = TRUE),
+                                                      max(r, na.rm = TRUE), 
+                                                      sd(r, na.rm = TRUE)))
+#  # Round each value to 2 digits
+  myTabSummary <- round(myTabSummary,2)
+  
+  # Define the column names of the table
+  colnames(myTabSummary) <- colnames(myData)
+  # Define the row names of the table 
+  rownames(myTabSummary) <- c("min", 
+                              "25%", 
+                              "median", 
+                              "mean", 
+                              "75 %", 
+                              "max", 
+                              "std")
+  # Transpose of the table
+  myTabSummary <- t(myTabSummary)
+@
+
+<<Chunk-StatPart1, echo=FALSE, fig=FALSE, results=tex>>= 
+  myCountP1Q01 = count(myData, 'P1Q01')
+  myCountP1Q01 <- myCountP1Q01[order(-myCountP1Q01$freq),]
+  mySpent1 = subset(myMap, myMap$question == 'P1Q01' &  myMap$index == myCountP1Q01[1, 'P1Q01'])[1, 'label']
+  mySpent2 = subset(myMap, myMap$question == 'P1Q01' &  myMap$index == myCountP1Q01[2, 'P1Q01'])[1, 'label']
+  mySpent3 = subset(myMap, myMap$question == 'P1Q01' &  myMap$index == myCountP1Q01[3, 'P1Q01'])[1, 'label']
+
+  myP1Q0301 = round(count(myData, 'P1Q0301')[2, 'freq'] / myDataSize * 100)
+  myP1Q0302 = round(count(myData, 'P1Q0302')[2, 'freq'] / myDataSize * 100)
+  myP1Q0303 = round(count(myData, 'P1Q0303')[2, 'freq'] / myDataSize * 100)
+  myStore <- data.frame(question=c('P1Q0301', 'P1Q0302', 'P1Q0303'),
+                        percent=c(myP1Q0301, myP1Q0302, myP1Q0303))
+  myStore <- myStore[order(-myStore$percent),]
+  myStore1  = subset(myMap, myMap$question == as.character(myStore[1, 1]))[1, 'label']
+
+  myP1Q0401 = round(count(myData, 'P1Q0401')[2, 'freq'] / myDataSize * 100)
+  myP1Q0402 = round(count(myData, 'P1Q0402')[2, 'freq'] / myDataSize * 100)
+  myP1Q0403 = round(count(myData, 'P1Q0403')[2, 'freq'] / myDataSize * 100)
+  myP1Q0404 = round(count(myData, 'P1Q0404')[2, 'freq'] / myDataSize * 100)
+  myProd <- data.frame(question=c('P1Q0401', 'P1Q0402', 'P1Q0403', 'P1Q0404'),
+                        percent=c(myP1Q0401, myP1Q0402, myP1Q0403, myP1Q0404))
+  myProd <- myProd[order(-myProd$percent),]
+  myProd1  = subset(myMap, myMap$question == as.character(myProd[1, 1]))[1, 'label']
+  myProd2  = subset(myMap, myMap$question == as.character(myProd[2, 1]))[1, 'label']
+  myProd3  = subset(myMap, myMap$question == as.character(myProd[3, 1]))[1, 'label']
+
+  myCountP1Q06 = count(myData, 'P1Q06')
+  myCountP1Q06 <- myCountP1Q06[order(-myCountP1Q06$freq),]
+  myRead1 = subset(myMap, myMap$question == 'P1Q06' &  myMap$index == myCountP1Q06[1, 'P1Q06'])[1, 'label']
+  myRead2 = subset(myMap, myMap$question == 'P1Q06' &  myMap$index == myCountP1Q06[2, 'P1Q06'])[1, 'label']
+  myRead3 = subset(myMap, myMap$question == 'P1Q06' &  myMap$index == myCountP1Q06[3, 'P1Q06'])[1, 'label']
+  
+  myCountP1Q07 = count(myData, 'P1Q07')
+  myCountP1Q07 <- myCountP1Q07[order(-myCountP1Q07$freq),]
+  myDisco1 = subset(myMap, myMap$question == 'P1Q07' &  myMap$index == myCountP1Q07[1, 'P1Q07'])[1, 'label']
+  myDisco2 = subset(myMap, myMap$question == 'P1Q07' &  myMap$index == myCountP1Q07[2, 'P1Q07'])[1, 'label']
+  myDisco3 = subset(myMap, myMap$question == 'P1Q07' &  myMap$index == myCountP1Q07[3, 'P1Q07'])[1, 'label']
+
+  mySenYoung = nrow(subset(myData, myData$P1Q08 == '1'))
+  myBuyYoung = nrow(subset(myData, myData$P1Q10 == '1'))
+  
+  myP1Q1201 = round(sum(myData$P1Q1201) / myDataSize, 1)
+  myP1Q1202 = round(sum(myData$P1Q1202) / myDataSize, 1)
+  myP1Q1203 = round(sum(myData$P1Q1203) / myDataSize, 1)
+  myP1Q1204 = round(sum(myData$P1Q1204) / myDataSize, 1)
+  myCrite <- data.frame(question=c('P1Q1201', 'P1Q1202', 'P1Q1203', 'P1Q1204'),
+                        percent=c(myP1Q1201, myP1Q1202, myP1Q1203, myP1Q1204))
+  myCrite <- myCrite[order(-myCrite$percent),]
+  myCrite1  = subset(myMap, myMap$question == as.character(myCrite[1, 1]))[1, 'label']
+  myCrite2  = subset(myMap, myMap$question == as.character(myCrite[2, 1]))[1, 'label']
+  myCrite3  = subset(myMap, myMap$question == as.character(myCrite[3, 1]))[1, 'label']
+
+@
+Part 1: women's habits in purchasing high-end fashion items
+\begin{enumerate}
+
+\item \Sexpr{round(myCountP1Q01[1, 'freq'] / myDataSize * 100)}\% of respondents spend \Sexpr{mySpent1} in luxury products per year, \Sexpr{round(myCountP1Q01[2, 'freq'] / myDataSize * 100)}\% spend \Sexpr{mySpent2} and \Sexpr{round(myCountP1Q01[3, 'freq'] / myDataSize * 100)}\% spend \Sexpr{mySpent3}, first in \Sexpr{myStore1} for \Sexpr{myStore[1, 2]}\% of them;
+
+\item The luxury items for which high-end quality is the most important are \Sexpr{myProd1}, \Sexpr{myProd2}, and \Sexpr{myProd3} for respectively \Sexpr{myProd[1, 2]}\%, \Sexpr{myProd[2, 2]}\%, and \Sexpr{myProd[3, 2]}\%  of respondents (several choices possible); 
+
+\item \Sexpr{round(myCountP1Q06[1, 'freq'] / myDataSize * 100)}\% of respondents read fashion magazines \Sexpr{myRead1}, \Sexpr{round(myCountP1Q06[2, 'freq'] / myDataSize * 100)}\%  \Sexpr{myRead2} and \Sexpr{round(myCountP1Q06[3, 'freq'] / myDataSize * 100)}\%  \Sexpr{myRead3}; 
+
+\item \Sexpr{round(myCountP1Q07[1, 'freq'] / myDataSize * 100)}\% of respondents discover new fashion items in magazine  \Sexpr{myDisco1} that they shop later, \Sexpr{round(myCountP1Q07[2, 'freq'] / myDataSize * 100)}\% \Sexpr{myDisco2} and \Sexpr{round(myCountP1Q07[3, 'freq'] / myDataSize * 100)}\% \Sexpr{myDisco3};
+
+\item \Sexpr{round(mySenYoung / myDataSize * 100)}\% of respondents are sensitive to young designers and \Sexpr{round(myBuyYoung / myDataSize * 100)}\% have already bought luxury products from them;
+
+\item The most important criterias to buy young designers products are \Sexpr{myCrite1} (\Sexpr{myCrite[1, 2]}/10) followed by \Sexpr{myCrite2} (\Sexpr{myCrite[2, 2]}/10) and \Sexpr{myCrite3} (\Sexpr{myCrite[3, 2]}/10);\\
+
+\end{enumerate}
+
+<<Chunk-StatPart2, echo=FALSE, fig=FALSE, results=tex>>= 
+  myCountP2Q13 = count(myData, 'P2Q13')
+  myCountP2Q13 <- myCountP2Q13[order(-myCountP2Q13$freq),]
+  myStat1 = subset(myMap, myMap$question == 'P2Q13' &  myMap$index == myCountP2Q13[1, 'P2Q13'])[1, 'label']
+  myStat2 = subset(myMap, myMap$question == 'P2Q13' &  myMap$index == myCountP2Q13[2, 'P2Q13'])[1, 'label']
+  myStat3 = subset(myMap, myMap$question == 'P2Q13' &  myMap$index == myCountP2Q13[3, 'P2Q13'])[1, 'label']
+
+  myCountP2Q14 = count(myData, 'P2Q14')
+  myCountP2Q14 <- myCountP2Q14[order(-myCountP2Q14$freq),]
+  myNeed1 = subset(myMap, myMap$question == 'P2Q14' &  myMap$index == myCountP2Q14[1, 'P2Q14'])[1, 'label']
+  myNeed2 = subset(myMap, myMap$question == 'P2Q14' &  myMap$index == myCountP2Q14[2, 'P2Q14'])[1, 'label']
+  myNeed3 = subset(myMap, myMap$question == 'P2Q14' &  myMap$index == myCountP2Q14[3, 'P2Q14'])[1, 'label']
+
+  myP2Q1501 = round(count(myData, 'P2Q1501')[2, 'freq'] / myDataSize * 100)
+  myP2Q1502 = round(count(myData, 'P2Q1502')[2, 'freq'] / myDataSize * 100)
+  myP2Q1503 = round(count(myData, 'P2Q1503')[2, 'freq'] / myDataSize * 100)
+  myP2Q1504 = round(count(myData, 'P2Q1504')[2, 'freq'] / myDataSize * 100)
+  myP2Q1505 = round(count(myData, 'P2Q1505')[2, 'freq'] / myDataSize * 100)
+  myP2Q1506 = round(count(myData, 'P2Q1506')[2, 'freq'] / myDataSize * 100)
+  myP2Q1507 = round(count(myData, 'P2Q1507')[2, 'freq'] / myDataSize * 100)
+  myWhy <- data.frame(question=c('P2Q1501', 'P2Q1502', 'P2Q1503', 'P2Q1504', 'P2Q1505', 'P2Q1506', 'P2Q1507'),
+                        percent=c(myP2Q1501, myP2Q1502, myP2Q1503, myP2Q1504, myP2Q1505, myP2Q1506, myP2Q1507))
+  myWhy <- myWhy[order(-myWhy$percent),]
+  myWhy1  = subset(myMap, myMap$question == as.character(myWhy[1, 1]))[1, 'label']
+  myWhy2  = subset(myMap, myMap$question == as.character(myWhy[2, 1]))[1, 'label']
+  myWhy3  = subset(myMap, myMap$question == as.character(myWhy[3, 1]))[1, 'label']
+  
+  mySport = nrow(subset(myData, myData$P2Q17 == '1'))
+
+  myCountP2Q27 = count(myData, 'P2Q27')
+  myCountP2Q27 <- myCountP2Q27[order(-myCountP2Q27$freq),]
+  myNb1 = subset(myMap, myMap$question == 'P2Q27' &  myMap$index == myCountP2Q27[1, 'P2Q27'])[1, 'label']
+  myNb2 = subset(myMap, myMap$question == 'P2Q27' &  myMap$index == myCountP2Q27[2, 'P2Q27'])[1, 'label']
+  myNb3 = subset(myMap, myMap$question == 'P2Q27' &  myMap$index == myCountP2Q27[3, 'P2Q27'])[1, 'label']
+  
+  myCountP2Q28 = count(myData, 'P2Q28')
+  myCountP2Q28 <- myCountP2Q28[order(-myCountP2Q28$freq),]
+  myFreq1 = subset(myMap, myMap$question == 'P2Q28' &  myMap$index == myCountP2Q28[1, 'P2Q28'])[1, 'label']
+  myFreq2 = subset(myMap, myMap$question == 'P2Q28' &  myMap$index == myCountP2Q28[2, 'P2Q28'])[1, 'label']
+  myFreq3 = subset(myMap, myMap$question == 'P2Q28' &  myMap$index == myCountP2Q28[3, 'P2Q28'])[1, 'label']
+
+  myP2Q2901 = round(sum(myData$P2Q2901) / myDataSize, 1)
+  myP2Q2902 = round(sum(myData$P2Q2902) / myDataSize, 1)
+  myP2Q2903 = round(sum(myData$P2Q2903) / myDataSize, 1)
+  myP2Q2904 = round(sum(myData$P2Q2904) / myDataSize, 1)
+  myUse <- data.frame(question=c('P2Q2901', 'P2Q2902', 'P2Q2903', 'P2Q2904'),
+                        percent=c(myP2Q2901, myP2Q2902, myP2Q2903, myP2Q2904))
+  myUse <- myUse[order(-myUse$percent),]
+  myUse1  = subset(myMap, myMap$question == as.character(myUse[1, 1]))[1, 'label']
+  myUse2  = subset(myMap, myMap$question == as.character(myUse[2, 1]))[1, 'label']
+  myUse3  = subset(myMap, myMap$question == as.character(myUse[3, 1]))[1, 'label']  
+
+  myP2Q3001 = round(sum(myData$P2Q3001) / myDataSize, 1)
+  myP2Q3002 = round(sum(myData$P2Q3002) / myDataSize, 1)
+  myP2Q3003 = round(sum(myData$P2Q3003) / myDataSize, 1)
+  myP2Q3004 = round(sum(myData$P2Q3004) / myDataSize, 1)
+  myP2Q3005 = round(sum(myData$P2Q3005) / myDataSize, 1)
+  myP2Q3006 = round(sum(myData$P2Q3006) / myDataSize, 1)
+  myP2Q3007 = round(sum(myData$P2Q3007) / myDataSize, 1)
+  myP2Q3008 = round(sum(myData$P2Q3008) / myDataSize, 1)
+  myP2Q3009 = round(sum(myData$P2Q3009) / myDataSize, 1)
+  myP2Q3010 = round(sum(myData$P2Q3010) / myDataSize, 1)
+  myDec <- data.frame(question=c('P2Q3001', 'P2Q3002', 'P2Q3003', 'P2Q3004', 'P2Q3005', 'P2Q3006', 'P2Q3007', 'P2Q3008', 'P2Q3009', 'P2Q3010'),
+                      percent=c(myP2Q3001, myP2Q3002, myP2Q3003, myP2Q3004, myP2Q3005, myP2Q3006, myP2Q3007, myP2Q3008, myP2Q3009, myP2Q3010))
+  myDec <- myDec[order(-myDec$percent),]
+  myDec1  = subset(myMap, myMap$question == as.character(myDec[1, 1]))[1, 'label']
+  myDec2  = subset(myMap, myMap$question == as.character(myDec[2, 1]))[1, 'label']
+  myDec3  = subset(myMap, myMap$question == as.character(myDec[3, 1]))[1, 'label']  
+    
+@
+Part 2: women's usage and purchase habits for hats, turbans and headbands
+\begin{enumerate}
+\item \Sexpr{round(myCountP2Q13[1, 'freq'] / myDataSize * 100)}\% of respondents are not satisfied \Sexpr{myStat1} with their hair, \Sexpr{round(myCountP2Q13[2, 'freq'] / myDataSize * 100)}\%  \Sexpr{myStat2} and \Sexpr{round(myCountP2Q13[3, 'freq'] / myDataSize * 100)}\%  \Sexpr{myStat3}; 
+
+\item \Sexpr{round(myCountP2Q14[1, 'freq'] / myDataSize * 100)}\% of respondents feel \Sexpr{myNeed1} the need to wear a hat, \Sexpr{round(myCountP2Q14[2, 'freq'] / myDataSize * 100)}\%  \Sexpr{myNeed2} and \Sexpr{round(myCountP2Q14[3, 'freq'] / myDataSize * 100)}\%  \Sexpr{myNeed3}; 
+
+\item The most important reasons for respondents to wear a hat are \Sexpr{myWhy1}, \Sexpr{myWhy2}, and \Sexpr{myWhy3} for respectively \Sexpr{myWhy[1, 2]}\%, \Sexpr{myWhy[2, 2]}\%, and \Sexpr{myWhy[3, 2]}\% (several choices possible); 
+
+\item \Sexpr{round(mySport / myDataSize * 100)}\% of respondents feel the need to wear hat when exercising;
+
+\item \Sexpr{round(myCountP2Q27[1, 'freq'] / myDataSize * 100)}\% of respondents have \Sexpr{myNb1} hats, \Sexpr{round(myCountP2Q27[2, 'freq'] / myDataSize * 100)}\% \Sexpr{myNb2}, and \Sexpr{round(myCountP2Q27[3, 'freq'] / myDataSize * 100)}\% \Sexpr{myNb3}; 
+
+\item \Sexpr{round(myCountP2Q28[1, 'freq'] / myDataSize * 100)}\% of respondents wear a hat \Sexpr{myFreq1}, \Sexpr{round(myCountP2Q28[2, 'freq'] / myDataSize * 100)}\% \Sexpr{myFreq2}, and \Sexpr{round(myCountP2Q28[3, 'freq'] / myDataSize * 100)}\% \Sexpr{myFreq3}; 
+
+\item The most important events to wear a hat are \Sexpr{myUse1} (\Sexpr{myUse[1, 2]}/10) followed by \Sexpr{myUse2} (\Sexpr{myUse[2, 2]}/10) and \Sexpr{myUse3} (\Sexpr{myUse[3, 2]}/10);
+
+\item The most important criterias to buy hats, turbans or headbands are \Sexpr{myDec1} (\Sexpr{myDec[1, 2]}/10) followed by \Sexpr{myDec2} (\Sexpr{myDec[2, 2]}/10) and \Sexpr{myDec3} (\Sexpr{myDec[3, 2]}/10); \\
+\end{enumerate}
+<<Chunk-StatPart3, echo=FALSE, fig=FALSE, results=tex>>= 
+  myCountP3Q32 = count(myData, 'P3Q32')
+  myCountP3Q32 <- myCountP3Q32[order(-myCountP3Q32$freq),]
+  myMoA1 = subset(myMap, myMap$question == 'P3Q32' &  myMap$index == myCountP3Q32[1, 'P3Q32'])[1, 'label']
+  myMoA2 = subset(myMap, myMap$question == 'P3Q32' &  myMap$index == myCountP3Q32[2, 'P3Q32'])[1, 'label']
+  myMoA3 = subset(myMap, myMap$question == 'P3Q32' &  myMap$index == myCountP3Q32[3, 'P3Q32'])[1, 'label']
+
+  myCountP3Q34 = count(myData, 'P3Q34')
+  myCountP3Q34 <- myCountP3Q34[order(-myCountP3Q34$freq),]
+  myMoB1 = subset(myMap, myMap$question == 'P3Q32' &  myMap$index == myCountP3Q34[1, 'P3Q34'])[1, 'label']
+  myMoB2 = subset(myMap, myMap$question == 'P3Q32' &  myMap$index == myCountP3Q34[2, 'P3Q34'])[1, 'label']
+  myMoB3 = subset(myMap, myMap$question == 'P3Q32' &  myMap$index == myCountP3Q34[3, 'P3Q34'])[1, 'label']
+
+  myCountP3Q36 = count(myData, 'P3Q36')
+  myCountP3Q36 <- myCountP3Q36[order(-myCountP3Q36$freq),]
+  myMoC1 = subset(myMap, myMap$question == 'P3Q32' &  myMap$index == myCountP3Q36[1, 'P3Q36'])[1, 'label']
+  myMoC2 = subset(myMap, myMap$question == 'P3Q32' &  myMap$index == myCountP3Q36[2, 'P3Q36'])[1, 'label']
+  myMoC3 = subset(myMap, myMap$question == 'P3Q32' &  myMap$index == myCountP3Q36[3, 'P3Q36'])[1, 'label']
+
+  myCountP3Q38 = count(myData, 'P3Q38')
+  myCountP3Q38 <- myCountP3Q38[order(-myCountP3Q38$freq),]
+  myMoD1 = subset(myMap, myMap$question == 'P3Q32' &  myMap$index == myCountP3Q38[1, 'P3Q38'])[1, 'label']
+  myMoD2 = subset(myMap, myMap$question == 'P3Q32' &  myMap$index == myCountP3Q38[2, 'P3Q38'])[1, 'label']
+  myMoD3 = subset(myMap, myMap$question == 'P3Q32' &  myMap$index == myCountP3Q38[3, 'P3Q38'])[1, 'label']
+
+  myCountP3Q40 = count(myData, 'P3Q40')
+  myCountP3Q40 <- myCountP3Q40[order(-myCountP3Q40$freq),]
+  myMoE1 = subset(myMap, myMap$question == 'P3Q32' &  myMap$index == myCountP3Q40[1, 'P3Q40'])[1, 'label']
+  myMoE2 = subset(myMap, myMap$question == 'P3Q32' &  myMap$index == myCountP3Q40[2, 'P3Q40'])[1, 'label']
+  myMoE3 = subset(myMap, myMap$question == 'P3Q32' &  myMap$index == myCountP3Q40[3, 'P3Q40'])[1, 'label']
+
+  myCountP3Q42 = count(myData, 'P3Q42')
+  myCountP3Q42 <- myCountP3Q42[order(-myCountP3Q42$freq),]
+  myMoF1 = subset(myMap, myMap$question == 'P3Q32' &  myMap$index == myCountP3Q42[1, 'P3Q42'])[1, 'label']
+  myMoF2 = subset(myMap, myMap$question == 'P3Q32' &  myMap$index == myCountP3Q42[2, 'P3Q42'])[1, 'label']
+  myMoF3 = subset(myMap, myMap$question == 'P3Q32' &  myMap$index == myCountP3Q42[3, 'P3Q42'])[1, 'label']
+
+  myCountP3Q44 = count(myData, 'P3Q44')
+  myCountP3Q44 <- myCountP3Q44[order(-myCountP3Q44$freq),]
+  myMoG1 = subset(myMap, myMap$question == 'P3Q32' &  myMap$index == myCountP3Q44[1, 'P3Q44'])[1, 'label']
+  myMoG2 = subset(myMap, myMap$question == 'P3Q32' &  myMap$index == myCountP3Q44[2, 'P3Q44'])[1, 'label']
+  myMoG3 = subset(myMap, myMap$question == 'P3Q32' &  myMap$index == myCountP3Q44[3, 'P3Q44'])[1, 'label']
+  
+@
+Part 3: feedbacks about some of the existing models
+\begin{enumerate}
+\item Model A: the average willingness to buy is estimated at \Sexpr{round(myTabSummary['P3Q31', 'mean']/10*8,1)}/10. \Sexpr{round(myCountP3Q32[1, 'freq'] / myDataSize * 100)}\% of respondents would by it at \Sexpr{myMoA1}, \Sexpr{round(myCountP3Q32[2, 'freq'] / myDataSize * 100)}\% \Sexpr{myMoA2}, and \Sexpr{round(myCountP3Q32[3, 'freq'] / myDataSize * 100)}\% \Sexpr{myMoA3};
+
+\item Model B: the average willingness to buy is estimated at \Sexpr{round(myTabSummary['P3Q33', 'mean']/10*8,1)}/10. \Sexpr{round(myCountP3Q34[1, 'freq'] / myDataSize * 100)}\% of respondents would by it at \Sexpr{myMoB1}, \Sexpr{round(myCountP3Q34[2, 'freq'] / myDataSize * 100)}\% \Sexpr{myMoB2}, and \Sexpr{round(myCountP3Q34[3, 'freq'] / myDataSize * 100)}\% \Sexpr{myMoB3};
+
+\item Model C: the average willingness to buy is estimated at \Sexpr{round(myTabSummary['P3Q35', 'mean'],1)}/10. \Sexpr{round(myCountP3Q36[1, 'freq'] / myDataSize * 100)}\% of respondents would by it at \Sexpr{myMoC1}, \Sexpr{round(myCountP3Q36[2, 'freq'] / myDataSize * 100)}\% \Sexpr{myMoC2}, and \Sexpr{round(myCountP3Q36[3, 'freq'] / myDataSize * 100)}\% \Sexpr{myMoC3};
+
+\item Model D: the average willingness to buy is estimated at \Sexpr{round(myTabSummary['P3Q37', 'mean'],1)}/10. \Sexpr{round(myCountP3Q38[1, 'freq'] / myDataSize * 100)}\% of respondents would by it at \Sexpr{myMoD1}, \Sexpr{round(myCountP3Q38[2, 'freq'] / myDataSize * 100)}\% \Sexpr{myMoD2}, and \Sexpr{round(myCountP3Q38[3, 'freq'] / myDataSize * 100)}\% \Sexpr{myMoD3};
+
+\item Model E: the average willingness to buy is estimated at \Sexpr{round(myTabSummary['P3Q39', 'mean'],1)}/10. \Sexpr{round(myCountP3Q40[1, 'freq'] / myDataSize * 100)}\% of respondents would by it at \Sexpr{myMoE1}, \Sexpr{round(myCountP3Q40[2, 'freq'] / myDataSize * 100)}\% \Sexpr{myMoE2}, and \Sexpr{round(myCountP3Q40[3, 'freq'] / myDataSize * 100)}\% \Sexpr{myMoE3};
+
+\item Model F: the average willingness to buy is estimated at \Sexpr{round(myTabSummary['P3Q41', 'mean'],1)}/10. \Sexpr{round(myCountP3Q42[1, 'freq'] / myDataSize * 100)}\% of respondents would by it at \Sexpr{myMoF1}, \Sexpr{round(myCountP3Q42[2, 'freq'] / myDataSize * 100)}\% \Sexpr{myMoF2}, and \Sexpr{round(myCountP3Q42[3, 'freq'] / myDataSize * 100)}\% \Sexpr{myMoF3};
+
+\item Model G: the average willingness to buy is estimated at \Sexpr{round(myTabSummary['P3Q43', 'mean'],1)}/10. \Sexpr{round(myCountP3Q44[1, 'freq'] / myDataSize * 100)}\% of respondents would by it at \Sexpr{myMoG1}, \Sexpr{round(myCountP3Q44[2, 'freq'] / myDataSize * 100)}\% \Sexpr{myMoG2}, and \Sexpr{round(myCountP3Q44[3, 'freq'] / myDataSize * 100)}\% \Sexpr{myMoG3};\\
+\end{enumerate}
+
+<<Chunk-StatPart4, echo=FALSE, fig=FALSE, results=tex>>= 
+  myCountP4Q46 = count(myData, 'P4Q46')
+  myCountP4Q46 <- myCountP4Q46[order(-myCountP4Q46$freq),]
+  myRegion1 = subset(myMap, myMap$question == 'P4Q46' &  myMap$index == myCountP4Q46[1, 'P4Q46'])[1, 'label']
+  myRegion2 = subset(myMap, myMap$question == 'P4Q46' &  myMap$index == myCountP4Q46[2, 'P4Q46'])[1, 'label']
+  myRegion3 = subset(myMap, myMap$question == 'P4Q46' &  myMap$index == myCountP4Q46[3, 'P4Q46'])[1, 'label']
+
+  myCountP4Q47 = count(myData, 'P4Q47')
+  myCountP4Q47 <- myCountP4Q47[order(-myCountP4Q47$freq),]
+  myGroup1 = subset(myMap, myMap$question == 'P4Q47' &  myMap$index == myCountP4Q47[1, 'P4Q47'])[1, 'label']
+  myGroup2 = subset(myMap, myMap$question == 'P4Q47' &  myMap$index == myCountP4Q47[2, 'P4Q47'])[1, 'label']
+  myGroup3 = subset(myMap, myMap$question == 'P4Q47' &  myMap$index == myCountP4Q47[3, 'P4Q47'])[1, 'label']
+
+@
+Part 4: general information about respondent's profile
+\begin{enumerate}
+\item \Sexpr{round(myCountP4Q46[1, 'freq'] / myDataSize * 100)}\% of respondents are from \Sexpr{myRegion1}, \Sexpr{round(myCountP4Q46[2, 'freq'] / myDataSize * 100)}\% from \Sexpr{myRegion2} and \Sexpr{round(myCountP4Q46[3, 'freq'] / myDataSize * 100)}\% from \Sexpr{myRegion3};
+
+\item \Sexpr{round(myCountP4Q47[1, 'freq'] / myDataSize * 100)}\% of respondents are from group \Sexpr{myGroup1}, \Sexpr{round(myCountP4Q47[2, 'freq'] / myDataSize * 100)}\% from group \Sexpr{myGroup2} and \Sexpr{round(myCountP4Q47[3, 'freq'] / myDataSize * 100)}\% from group \Sexpr{myGroup3};
+
+\item The average age of the respondents is \Sexpr{round(myTabSummary['P4Q48', 'mean'])} years with a standard deviation of \Sexpr{round(myTabSummary['P4Q48', 'std'], 1)} years, the minimum and maximum ages being respectively \Sexpr{myTabSummary['P4Q48', 'min']} and \Sexpr{myTabSummary['P4Q48', 'max']} years;
+\end{enumerate}
+
+\subsection{Factor Analysis on Part1}
+The Factor Analysis should help us to summarize the \Sexpr{myAttrFacNamesSize} variables that we have for the part 1 to a limited number of factors, in order to proceed later to a clustering analysis. This latter is not included in the scope of this implementation essay. The scree plot is helping us to identify the best number of factors to summarize our data. The table providing the "explained variance" is provided in the appendix (see section ~\ref{label-variance}, page~\pageref{label-variance}).
+
+\begin{center}
+<<Chunk-TabScreePlot01, echo=FALSE, fig=TRUE>>=
+  # Calculate the unrotated factors and eigan values based on the total number of attributes selected
+  myUnrotatedRes <- principal(myDataFactor, nfactors=ncol(myAttrFac), rotate="none")
+  myEigenValues <- myUnrotatedRes$values
+  myUnrotatedFac <- myUnrotatedRes$loadings[,1:ncol(myAttrFac),drop=FALSE]
+  
+  # Add the names of the rows and the columns 
+  myUnrotatedFac<-as.data.frame(unclass(myUnrotatedFac))
+  colnames(myUnrotatedFac)<-paste("Component",1:ncol(myAttrFac),sep=" ")
+  rownames(myUnrotatedFac) <- colnames(myDataFactor)
+  
+  # Plot the scree plot
+  myTabSceePlot <- cbind(as.data.frame(myEigenValues), c(1:length(myEigenValues)), rep(1, length(myEigenValues)))
+  colnames(myTabSceePlot) <- c("Eigenvalues", "Components", "Abline")
+  xyplot(Eigenvalues + Abline ~ Components , myTabSceePlot, type = c('b','b'), col = c("blue", "red"), main='Scree plot')
+@
+\end{center}
+According to the Scree plot, the data can be summarized using 7 factors. 
+\newpage
+The rotated factors table describes how each factor is composed. 
+<<Chunk-TabRotatedFactor01, echo=FALSE, results=tex>>=
+  myRotatedRes <- principal(myDataFactor, nfactors=myFactSize, rotate=myMethod, score=TRUE)
+  myRotatedFac <- round(myRotatedRes$loadings, 2)
+  myRotatedFac <- as.data.frame(unclass(myRotatedFac))
+  colnames(myRotatedFac) <-paste("Comp",1:ncol(myRotatedFac),sep=" ")
+    
+  mySortedRows <- sort(myRotatedFac[,1], decreasing = TRUE, index.return = TRUE)$ix
+  myRotatedFac <- myRotatedFac[mySortedRows,]
+    
+  myRotatedFac <- as.data.frame(unclass(myRotatedFac))
+  colnames(myRotatedFac)<-paste("Comp",1:ncol(myRotatedFac),sep=" ")
+  rownames(myRotatedFac) <- colnames(myDataFactor)
+  
+  myRotatedFacX <- xtable(myRotatedFac, caption = "Rotated Factors", label = "tab:five")
+  align(myRotatedFacX) <- "|l|lllllll|"
+  print(myRotatedFacX, tabular.environment="longtable")
+
+@
+In this case, it is difficult to give a business sense to the different factors according to their composition. This issue is well illustrated with the 3 first factors.\\
+\\
+The factor 1 (or Comp1) is composed with:
+\begin{enumerate}
+\item P1Q01 (0.91) - How much do you spend on high-end fashion items per year?
+\item P1Q03-01 (0.90) - Where do you usually shop that kind of items ? (Department stores)
+\item P1Q02-02 (0.87) - Where do you usually shop that kind of items ? (Multibrand stores)
+\end{enumerate}
+
+The factor 2 (or Comp1) is composed with:
+\begin{enumerate}
+\item P1Q10 (0.89) - Have you ever bought a fashion item from a young designer?
+\item P1Q12-02 (0.82) - Which argument would convince you to shop from a young designer? (Quality of fabrics)
+\end{enumerate}
+
+The factor 3 (or Comp1) is composed with:
+\begin{enumerate}
+\item P1Q08 (0.92) - Are you sensitive to young designers?
+\item P1Q04-01 (0.76) - In which one, of these items,would you favor high-endquality over mass-marketquality? (Ready-to-wear)
+\end{enumerate}
+
+This phenomenom can be explained by the limited correlation between the different considered  (the matrix of correlation is not provided in this document). It is also the case if we consider only the variables of the part 2 of the survey or if we consider the variables of the part 1 and part 2 together. In the case of that survey, the Factor Analysis is then of limited help to reduce the number of variables before proceeding to a cluster analysis.
+
+\section{Chapter 4: Conclusion}
+\subsection{How close is theory with reality?}
+This impementation essay has allowed to use some of the tools which have been presented during the "Big Data" elective course in July. R-Studio is a very sophisticated software for business analytics, quite easy to use but requires nevertheless some IT background to be very efficient. The Factor Analysis tool, which was also introduced, can be also easy used but doesn't provided always, as we have seen, a lot of help to summarize our data because sometimes it is not possible.\\
+\\
+Beyond the use of some tools, it was also an opportunity to look at all the steps of a "Big Data" project, from the preparation of the survey, the transformation of the data, the coding of the required business analytics tools and the understanding of the results. It highlighted the importance of the preparation step, in particular in the definition of our objectives and on the elaboration of the survey to ask the right questions to collect the relevant data.  In our case, due to the limitation of time, it was not possible to interate several times on our data to refine our understanding.\\
+\\
+\subsection{What can we learn from this gap?}
+The "Big Data" elective was a foretaste of this new "science", which is the "data science". It is then difficult to estimate gaps between "theory" and "reality". Nevertheless, in business environment, even if companies understand now the importance of their data, most of them are not exploiting this opportunity as it could be. Here is the gap.\\
+\\
+\subsection{Is this an opportunity to change our reality or an opportunity to modify our theories? Or both?}
+It is then really an opportunity for companies to change how they manage and use their data to develop new business opportunities and create value. They will have to change first how they consider this field, sometimes seen only as an IT domain, and then allocate the right resources and find the right positionning in their organization.\\
+\\
+\newpage
+\section{Appendix}
+\subsection{Some turbans and headbands}
+Examples of turbans and headbands designed by Donia Allegre. \label{label-models}
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+Model A & 
+Model B & 
+Model C \\
+\hline
+\includegraphics[width=4cm]{images/01-066.jpg} & 
+\includegraphics[width=4cm]{images/02-152.jpg} & 
+\includegraphics[width=4cm]{images/03-034.jpg} \\
+\hline
+Model D & 
+Model E & 
+Model F \\
+\hline
+\includegraphics[width=4cm]{images/04-043.jpg} &
+\includegraphics[width=4cm]{images/04-052.jpg} &
+\includegraphics[width=4cm]{images/06-131.jpg} \\
+\hline
+Model G & 
+Model H & 
+Model I \\
+\hline
+\includegraphics[width=4cm]{images/013-048.jpg} &
+\includegraphics[width=4cm]{images/07-009.jpg} &
+\includegraphics[width=4cm]{images/09-052.jpg} \\
+\hline
+\end{tabular}
+\end{center}
+\newpage
+
+\subsection{The questions of the survey and its transformation \label{label-survey}}
+\begin{center}
+\begin{longtable}{|L{5cm}|L{6cm}|C{2cm}|C{1.5cm}|} \hline 
+Original question &	Original Answers & Renainming &	New values  \\ \hline 
+\multicolumn{4}{|c|}{Part 1: women's habits in purchasing high-end fashion items} \\ \hline 
+\multirow{5}{5cm}{1. How much do you spend on high-end fashion items per year?} & Under 1 000€ &	\multirow{5}{*}{P1Q01} &	1 \\ \cline{2-2} \cline{4-4}
+& Between 1 000 and 2 000€ &&	2 \\ \cline{2-2} \cline{4-4}
+& Between 2 000 and 5 000€	&&	3 \\ \cline{2-2} \cline{4-4}
+& Between 5 000 and 10 000€ &&	4 \\  \cline{2-2} \cline{4-4}
+& Over 10 000€  &&	5 \\ \hline \cline{2-2} \cline{4-4}
+2. What is the latest high-end fashion item that you have bought? & Free-text (not taken into account in the analysis)  & P1Q02  & Free-text \\ \hline 
+\multirow{3}{5cm}{3. Where do you usually shop that kind of items?} & Department stores	& P1Q03-01 &	0 or 1 \\ \cline{2-4}
+& Multibrand stores & P1Q03-02 & 0 or 1 \\ \cline{2-4}
+& Luxury boutiques & P1Q03-03	& 0 or 1 \\ \hline
+\multirow{6}{5cm}{4. In which one, of these items, would you favor high-end quality over mass-market quality?} & Ready to wear &	P1Q04-01	& 0 or 1 \\ \cline{2-4}
+& Shoes &	P1Q04-02 &	0 or 1 \\ \cline{2-4}
+& Handbags &	P1Q04-03	& 0 or 1 \\ \cline{2-4}
+& Lingerie &	P1Q04-04 &	0 or 1 \\ \cline{2-4}
+& Swimming Suits &	P1Q04-05	& 0 or 1 \\ \cline{2-4}
+& Hats & P1Q04-06	& 0 or 1 \\ \hline
+5. Which high-end fashion brands do you usually shop? &	Free-text (not taken into account in the analysis) & P1Q05	& Free-text \\ \hline
+\multirow{5}{5cm}{6. How often do you read fashion magazines?} &	Never & \multirow{5}{*}{P1Q06} &	1 \\ \cline{2-2} \cline{4-4}
+& Once a month && 2 \\ \cline{2-2} \cline{4-4}
+& Several times a month && 3 \\ \cline{2-2} \cline{4-4}
+& Once a week && 4 \\ \cline{2-2} \cline{4-4}
+& Several times a week &&	5 \\ \cline{2-2} \hline
+\multirow{4}{5cm}{7. How often do you discover high-end fashion items in magazines that you shop later on?} & Never & \multirow{4}{*}{P1Q07} &	1 \\ \cline{2-2} \cline{4-4}
+& Once a year &&	2 \\ \cline{2-2} \cline{4-4}
+& Once a month &&	3 \\ \cline{2-2} \cline{4-4}
+& Regularly && 4 \\ \hline
+8. Are you sensitive to Young Designers? &	No or Yes &	P1Q08 &	0 or 1 \\ \hline
+9. Could you cite some Young Designers that you know? & Free-text (not taken into account in the analysis) & P1Q09	& Free-text \\ \hline
+10. Have you ever bought a fashion item from a Young Designer? &	No or Yes	& P1Q10 &	0 or 1 \\ \hline
+11. Which fashion Designer? Which item? What price? & Free-text (not taken into account in the analysis) & P1Q11 & Free-text \\ \hline
+\newpage
+\hline
+\multirow{4}{5cm}{12. Which argument would convince you to shop from a Young Designer?} &  Design	& P1Q12-01	& 1 to 10 \\ \cline{2-4}
+& Quality of the fabrics	& P1Q12-02	& 1 to 10 \\ \cline{2-4}
+& Fitting & P1Q12-03 & 1 to 10 \\ \cline{2-4}
+& Uniqueness &	P1Q12-04 & 1 to 10 \\ \hline
+\multicolumn{4}{|c|}{Part 2: women's usage and purchase habits for hats, turbans and headbands} \\ \hline 
+\multirow{5}{5cm}{13. How often do you feel you are not satisfied with your hair?} & Never & \multirow{5}{*}{P2Q13}	& 1 \\ \cline{2-2} \cline{4-4}
+&	Once a year	&&	2 \\ \cline{2-2} \cline{4-4}
+&	Once a month	&&	3 \\ \cline{2-2} \cline{4-4}
+&	Once a week	&& 4 \\ \cline{2-2} \cline{4-4}
+&	Once a day &&	5 \\ \hline
+\multirow{5}{5cm}{14. How often do you feel the need to cover your head?} & Never &	\multirow{5}{*}{P2Q14} &	1 \\ \cline{2-2} \cline{4-4}
+&	Once a year &&	2 \\ \cline{2-2} \cline{4-4}
+&	Once a month	&&	3 \\ \cline{2-2} \cline{4-4}
+&	Once a week &&	4 \\ \cline{2-2} \cline{4-4}
+&	Once a day &&	5 \\ \hline
+\multirow{7}{5cm}{15. Would you wear a hat ...} & to look different? & P2Q15-01 &	0 or 1 \\ \cline{2-4}
+& to look beautiful? & P2Q15-02 &	0 or 1 \\ \cline{2-4}
+& to be noticed? &	P2Q15-03 &	0 or 1 \\ \cline{2-4}
+& to protect yourself from the sun?	& P2Q15-04 &	0 or 1 \\ \cline{2-4}
+& to protect yourself from the wind? &	P2Q15-05 &	0 or 1 \\ \cline{2-4}
+& to protect yourself from the rain? &	P2Q15-06 &	0 or 1 \\ \cline{2-4}
+& to protect yourself from the pollution? &	P2Q15-07 &	0 or 1\\ \hline
+16. If you had to coordinate the hat you wear with another product which one would it be? &	Free-text (not taken into account in the analysis) &	P2Q16 &	Free-text \\ \hline
+17. Do you feel the need to cover your head when exercising? &	No or Yes &	P2Q17 &	0 or 1 \\ \hline
+18. Why? &	Free-text (not taken into account in the analysis) &	P2Q18 &	Free-text \\ \hline
+19. Would you wear a hat (headband or turban) as a hairdo, replacing a bun for example? &	No or Yes &	P2Q19 &	0 or 1 \\ \hline
+20. Would you go to the hairdresser to fix a hairband or a turban as a hairdo? &	No or Yes	& P2Q20 &	0 or 1 \\ \hline
+21. Why would you NOT wear a hat ? &	Free-text (not taken into account in the analysis) &	P2Q21 &	Free-text \\ \hline
+22. If the turban were a color which one would it be? &	Free-text (not taken into account in the analysis) &	P2Q22 &	Free-text \\ \hline
+23. If the turban were an animal which one would it be? & Free-text (not taken into account in the analysis) & P2Q23 &	Free-text \\ \hline
+24. If the turban were a vegetal which one would it be? & Free-text (not taken into account in the analysis) & P2Q24 &	Free-text \\ \hline
+25. If the turban were a mineral which one would it be? &	Free-text (not taken into account in the analysis) &	P2Q25	& Free-text \\ \hline
+26. If it were to be worn by a celebrity, which celebrity would it be? &	Free-text (not taken into account in the analysis)	& P2Q26 &	Free-text \\ \hline
+\multirow{5}{5cm}{27. How many hats, turbans or headbands do you have?} &	Never & \multirow{5}{*}{P2Q27} &	1 \\ \cline{2-2} \cline{4-4}
+& Between 1 and 2 times per year &&	2 \\ \cline{2-2} \cline{4-4} 
+& Between 3 and 5 times per year &&	3 \\ \cline{2-2} \cline{4-4}
+& More than once per month &&	4 \\ \cline{2-2} \cline{4-4}
+& More than once per week && 5 \\ \hline
+\multirow{5}{5cm}{28. How many times do you wear a hat/turban/headband per year as an average?} & None &	\multirow{5}{*}{P2Q28} &	1 \\ \cline{2-2} \cline{4-4}
+& Between 1 and 2 && 2 \\ \cline{2-2} \cline{4-4}
+& Between 3 and 5 && 3 \\ \cline{2-2} \cline{4-4}
+& Between 6 and 10 &&	4 \\ \cline{2-2} \cline{4-4}
+& More than 10 &&	5 \\ \hline 
+\multirow{4}{5cm}{29. Do you wear a hat, turban, headband ...} & for celebrations? & P2Q29-01 &	1 to 10 \\ \cline{2-4}
+& for vacations? & P2Q29-02	& 1 to 10 \\ \cline{2-4}
+& for business? &	P2Q29-03	& 1 to 10  \\ \cline{2-4}
+& at home & P2Q29-04 &	1 to 10 \\ \hline 
+\multirow{10}{5cm}{30. What is the importance of the following factors in your purchase decision of a hat, turban or headband?} &	Design &	P2Q30-01	& 1 to 10  \\ \cline{2-4}
+& Brand	& P2Q30-02 & 1 to 10  \\ \cline{2-4}
+& Uniqueness	& P2Q30-03	& 1 to 10  \\ \cline{2-4}
+& Customizable	& P2Q30-04	& 1 to 10  \\ \cline{2-4}
+& Price	& P2Q30-05	& 1 to 10  \\ \cline{2-4}
+& Reuse	& P2Q30-06 &	1 to 10  \\ \cline{2-4}
+& Availability & P2Q30-07 &	1 to 10  \\ \cline{2-4}
+& "Made in" & P2Q30-08	& 1 to 10  \\ \cline{2-4}
+& Ability to try it	& P2Q30-09 &	1 to 10  \\ \cline{2-4}
+& Embroidery	& P2Q30-10& 	1 to 10 \\ \hline 
+\multicolumn{4}{|c|}{Part 3: feedbacks about some of the existing models} \\ \hline 
+31. Would you consider buying that turban? [Model A] && P3Q31 &	1 to 8 \\ \hline 
+\multirow{6}{5cm}{32. What would be your willingness to pay for such a product? [Model A]} &	Below 100€ &	\multirow{6}{*}{P3Q32}	& 1 \\ \cline{2-2} \cline{4-4}
+& Between 100 and 200€ &&	2 \\ \cline{2-2} \cline{4-4}
+& Between 200 and 300€ &&	3 \\ \cline{2-2} \cline{4-4}
+& Between 300 and 500€ &&	4 \\ \cline{2-2} \cline{4-4}
+& Between 500 and 700€ &&	5 \\ \cline{2-2} \cline{4-4}
+& Above 700€ &&	6 \\ \hline 
+33. Would you consider buying that turban? [Model B] && P3Q33 &	1 to 8 \\ \hline 
+\multirow{6}{5cm}{34. What would be your willingness to pay for such a product? [Model B]} &	Below 100€ &	\multirow{6}{*}{P3Q34}	& 1 \\ \cline{2-2} \cline{4-4}
+& Between 100 and 200€ &&	2 \\ \cline{2-2} \cline{4-4}
+& Between 200 and 300€ &&	3 \\ \cline{2-2} \cline{4-4}
+& Between 300 and 500€ &&	4 \\ \cline{2-2} \cline{4-4}
+& Between 500 and 700€ &&	5 \\ \cline{2-2} \cline{4-4}
+& Above 700€ &&	6 \\ \hline 
+35. Would you consider buying that turban? [Model C] && P3Q35 &	1 to 10 \\ \hline 
+\multirow{6}{5cm}{36. What would be your willingness to pay for such a product? [Model C]} &	Below 100€ &	\multirow{6}{*}{P3Q36}	& 1 \\ \cline{2-2} \cline{4-4}
+& Between 100 and 200€ &&	2 \\ \cline{2-2} \cline{4-4}
+& Between 200 and 300€ &&	3 \\ \cline{2-2} \cline{4-4}
+& Between 300 and 500€ &&	4 \\ \cline{2-2} \cline{4-4}
+& Between 500 and 700€ &&	5 \\ \cline{2-2} \cline{4-4}
+& Above 700€ &&	6 \\ \hline 
+Original question &	Original Answers & Renainming &	New values  \\ \hline 
+37. Would you consider buying that turban? [Model D] && P3Q37 &	1 to 10 \\ \hline 
+\multirow{6}{5cm}{38. What would be your willingness to pay for such a product? [Model D]} &	Below 100€ &	\multirow{6}{*}{P3Q38}	& 1 \\ \cline{2-2} \cline{4-4}
+& Between 100 and 200€ &&	2 \\ \cline{2-2} \cline{4-4}
+& Between 200 and 300€ &&	3 \\ \cline{2-2} \cline{4-4}
+& Between 300 and 500€ &&	4 \\ \cline{2-2} \cline{4-4}
+& Between 500 and 700€ &&	5 \\ \cline{2-2} \cline{4-4}
+& Above 700€ &&	6 \\ \hline 
+39. Would you consider buying that turban? [Model E] && P3Q39 &	1 to 10 \\ \hline 
+\multirow{6}{5cm}{40. What would be your willingness to pay for such a product? [Model E]} &	Below 100€ &	\multirow{6}{*}{P3Q40}	& 1 \\ \cline{2-2} \cline{4-4}
+& Between 100 and 200€ &&	2 \\ \cline{2-2} \cline{4-4}
+& Between 200 and 300€ &&	3 \\ \cline{2-2} \cline{4-4}
+& Between 300 and 500€ &&	4 \\ \cline{2-2} \cline{4-4}
+& Between 500 and 700€ &&	5 \\ \cline{2-2} \cline{4-4}
+& Above 700€ &&	6 \\ \hline 
+41. Would you consider buying that turban? [Model F] && P3Q41 &	1 to 10 \\ \hline 
+\multirow{6}{5cm}{42. What would be your willingness to pay for such a product? [Model F]} &	Below 100€ &	\multirow{6}{*}{P3Q42}	& 1 \\ \cline{2-2} \cline{4-4}
+& Between 100 and 200€ &&	2 \\ \cline{2-2} \cline{4-4}
+& Between 200 and 300€ &&	3 \\ \cline{2-2} \cline{4-4}
+& Between 300 and 500€ &&	4 \\ \cline{2-2} \cline{4-4}
+& Between 500 and 700€ &&	5 \\ \cline{2-2} \cline{4-4}
+& Above 700€ &&	6 \\ \hline 
+43. Would you consider buying that turban? [Model G] && P3Q43 &	1 to 10 \\ \hline 
+\multirow{6}{5cm}{44. What would be your willingness to pay for such a product? [Model G]} &	Below 100€ &	\multirow{6}{*}{P3Q44}	& 1 \\ \cline{2-2} \cline{4-4}
+& Between 100 and 200€ &&	2 \\ \cline{2-2} \cline{4-4}
+& Between 200 and 300€ &&	3 \\ \cline{2-2} \cline{4-4}
+& Between 300 and 500€ &&	4 \\ \cline{2-2} \cline{4-4}
+& Between 500 and 700€ &&	5 \\ \cline{2-2} \cline{4-4}
+& Above 700€ &&	6 \\ \hline 
+\multicolumn{4}{|c|}{Part 4: general information about respondent's profile} \\ \hline 
+\multirow{2}{5cm}{45. Are you} & a male? & \multirow{2}{*}{P4Q45}	& 1 \\ \cline{2-2} \cline{4-4}
+& a female? && 2 \\ \hline 
+\multirow{9}{5cm}{46. Where do you live?} & North and Central America &	\multirow{9}{*}{P4Q46} &	1 \\ \cline{2-2} \cline{4-4}
+& South America &&	2 \\ \cline{2-2} \cline{4-4}
+& Western Europe &&	3 \\ \cline{2-2} \cline{4-4}
+& Eastern Europe and Russia &&	4 \\ \cline{2-2} \cline{4-4}
+& Middle-East and Africa &&	5 \\ \cline{2-2} \cline{4-4}
+& India	&&	6 \\ \cline{2-2} \cline{4-4}
+& China	&&	7 \\ \cline{2-2} \cline{4-4}
+& South East Asia &&	8 \\ \cline{2-2} \cline{4-4}
+& Oceania	&&	9 \\ \hline  
+\multirow{3}{5cm}{47. Are you} & An INSEAD student or alumni? &	\multirow{3}{*}{P4Q47} &	1 \\ \cline{2-2} \cline{4-4}
+& A friend of an INSEAD student or alumni &&	2 \\ \cline{2-2} \cline{4-4}
+&	Other && 3 \\ \hline 
+48. How old are you? & 25 to 65 & P4Q48	& 25 to 65 \\ \hline
+49. If you have any question or any suggestion & Free-text (not taken into account in the analysis)	& P4Q49 &	Free-text \\ \hline 
+\end{longtable}
+\end{center}
+
+\subsection{Statistical analysis of the responses \label{label-statistics}}
+The following table provides some statistics on all the responses provided.
+<<Chunk-TabSummary02, echo=FALSE, fig=FALSE, results=tex>>= 
+  # Display of the table
+  myTabSummaryX <- xtable(myTabSummary, 
+                          caption = "Summary for all variables", 
+                          label = "tab:two")
+  align(myTabSummaryX) <- "|l|lllllll|"
+  print(myTabSummaryX, tabular.environment="longtable")
+@
+
+\subsection{Variance explained \label{label-variance}}
+<<Chunk-TabVarExplPlot01, echo=FALSE, results=tex>>=
+  myTabVarExpRes <- PCA(myDataFactor, graph=FALSE)
+  myTabVarExp <- myTabVarExpRes$eig
+  
+  # Display of the table
+  myTabVarExpX <- xtable(myTabVarExp, caption = "Variances explained", label = "tab:four")
+  align(myTabVarExpX) <- "|l|lll|"
+  print(myTabVarExpX, tabular.environment="longtable")
+@
+
+\subsection{Example of R-Studio application with Shiny and GoogleVis \label{label-example}}
+Most of companies have implemented sophisticated software to manage business processes and related data, such as ERP (Entreprise Resource Planing) system or CRM (Customer Relationship Management) system. These applications are most of the time complex and expensive to use, requiring a high level of expertise. For business analytics purpose, the capabilities of these software are also quite limited and involves teams who are initially not the users of such systems, e.g.: marketing versus finance. CIO (Chef Information Officier) are then looking for independant software having reporting, analytics and visualization capabilities, sometimes aggregating data coming from different system.\\
+\\
+A short trial of R-Studio in this field has been conducted on sales data for gardening products of a main manaufacturer in Brazil. These data include sell-out data (sales to end-customers by retailers) and sell-in data (sales from manufacturer to retailers) of brazilian retailers month-by-month for years 2013, 2014 and 2015 for some applications and products. This short-trial aims to aggregate these data according to different criteria and visualize the results through different tools: maps, bar charts, tables, and histograms and from different points of view (geographical analysis, vendor analysis or product analysis). \\
+\\
+The following table provides some screenshots of this application.
+\begin{center}
+\begin{tabular}{|c|c|} \hline
+\includegraphics[width=8cm]{images/map.png} & \includegraphics[width=8cm]{images/vendor.png}  \\ \hline
+\includegraphics[width=8cm]{images/model.png} &  \\ \hline
+\end{tabular}
+\end{center}
+The implementation has been done using Shiny (R-Studio package to build web-application) and GoogleVis (R-Studio package provided by Google to use their own visualization tools in R-Studio). This trial is very positive. The application has been developped in about 10 hours by a R-Studio beginner. The application requires a mimimum of coding. The server.R file and the ui.R file contain respectively about 230 and 90 lines of code. The configuration of the GUI (Graphical User Interface) and of the visualization tools require a mimimum of code. Most of code is dedicated to the management of data (loading, aggregating and filtering), which could be potentially improved.To complete this trial, a roll-out test should be conducted. R-Studio provides for this purpose Cloud services or a Professional Edition of R-Studio, which have not been tested in the scope of this trial.
+\end{document}
